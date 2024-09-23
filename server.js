@@ -21,12 +21,19 @@ function generateKey(kid) {
     privateKeys[kid] = forge.pki.privateKeyToPem(privateKey);
 }
 
+// Logging middleware
+app.use((req, res, next) => {
+    console.log(`${req.method} ${req.url}`);
+    next();
+});
+
 app.get('/.well-known/jwks.json', (req, res) => {
     if (req.method !== 'GET') {
         return res.status(405).send('Method not allowed');
     }
 
     const responseKeys = Object.values(keys).filter(key => key.expiry > Math.floor(Date.now() / 1000));
+    console.log('JWKS response:', responseKeys); // Log the response keys
     res.json({ keys: responseKeys });
 });
 
@@ -47,10 +54,12 @@ app.post('/auth', (req, res) => {
     const expTime = expired ? Math.floor(Date.now() / 1000) - 3600 : Math.floor(Date.now() / 1000) + 3600;
 
     const token = jwt.sign({ iat: Math.floor(Date.now() / 1000), exp: expTime }, privKey, { algorithm: 'RS256', header: { kid: kid } });
+    
+    console.log(`Token issued for ${kid}: ${token}`); // Log the issued token
     res.send(token);
 });
 
 app.listen(port, () => {
     generateKey("key-id-1"); // Generate a new key
-    console.log(`Server listening on http://localhost:${port}`);
+    console.log(`Server working on http://localhost:${port}`);
 });
