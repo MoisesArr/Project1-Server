@@ -39,10 +39,10 @@ Authentication Endpoint:
 Use Postman to make a GET request to http://localhost:8080/.well-known/jwks.json to verify the public keys.
 
 Normal JWT Token:
-Open Postman, set the method to POST, and navigate to http://localhost:8080/auth.
+Open Postman, set the method to POST, and navigate to http://localhost:8080/auth
 Click Send to receive a JWT token.
 Expired JWT Token:
-Open Postman, set the method to POST, and navigate to http://localhost:8080/auth?expired=true.
+Open Postman, set the method to POST, and navigate to http://localhost:8080/auth?expired=true
 Click Send to receive a JWT token signed with an expired key.
 
 ## JWT Decoding:
