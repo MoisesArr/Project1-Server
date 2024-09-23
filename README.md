@@ -11,7 +11,7 @@ This project is a basic implementation of a JWKS (JSON Web Key Set) server. The 
 ## Setup Instructions
 1. **Clone the repository**:
    ```powershell
-   git clone https://github.com/MoisesArr/Project-1-JWKS-server.git
+   git clone "This repo"
   
 2. Navigate to the project directory:
    ```powershell
