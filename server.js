@@ -39,9 +39,7 @@ app.get('/.well-known/jwks.json', (req, res) => {
 
     // Filter the keys to only include those that haven't expired
     const responseKeys = Object.values(keys).filter(key => key.expiry > Math.floor(Date.now() / 1000));
-    // Log the public keys being returned
     console.log('JWKS response:', responseKeys);
-     // Respond with the public keys in JWKS format
     res.json({ keys: responseKeys });
 });
 // Endpoint to authenticate and return a JWT
@@ -56,9 +54,7 @@ app.post('/auth', (req, res) => {
 
     // Generate an expired key if it doesn't already exist
     if (expired && !(kid in keys)) {
-        // Generate a new key with the ID "expired-key-id"
         generateKey(kid);
-        // Set the key to expire in the past (1 hour ago)
         keys[kid].expiry = Math.floor(Date.now() / 1000) - 3600;
     }
     // Get the private key associated with the key ID
@@ -67,22 +63,16 @@ app.post('/auth', (req, res) => {
     const expTime = expired ? Math.floor(Date.now() / 1000) - 3600 : Math.floor(Date.now() / 1000) + 3600;
     // Create a JWT with issued at (iat) and expiration (exp) claims
     const token = jwt.sign(
-        // Payload: issued at and expiration time
         { iat: Math.floor(Date.now() / 1000), exp: expTime },
-        // Sign with the private key
         privKey,
-        // Use RS256 algorithm and add the key ID in the header
         { algorithm: 'RS256', header: { kid: kid } }
     );
     // Log the token issued
     console.log(`Token issued for ${kid}: ${token}`);
-    // Send the JWT to the client
     res.send(token);
 });
 // Start the server and generate an initial key
 app.listen(port, () => {
-    // Generate a new key
     generateKey("key-id-1");
-    // Log that the server is running
     console.log(`Server working on http://localhost:${port}`);
 });
